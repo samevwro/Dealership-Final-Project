@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    username: dealership
+    password: dealership
+    url: jdbc:mysql://localhost:3306/dealership
+    
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
