@@ -20,16 +20,17 @@ public class Vehicle {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long vehicleId;
 		
+	private Integer vehicleYear;
 	private String vehicleMake;
 	private String vehicleModel;
 	private String vehicleMilage;
-	private String vehcilePhysicalDamage;
+	private String vehiclePhysicalDamage;
 	private String vehicleImage;
 	private String vehicleType;
 	
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "dealerShip_Id")
 	private DealerShip dealerShip;
 }

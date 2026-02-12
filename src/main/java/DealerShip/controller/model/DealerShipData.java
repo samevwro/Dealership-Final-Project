@@ -7,16 +7,8 @@ import DealerShip.entity.Customer;
 import DealerShip.entity.DealerShip;
 import DealerShip.entity.Employee;
 import DealerShip.entity.Vehicle;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -54,7 +46,6 @@ public class DealerShipData {
 		for(Employee employee : dealerShip.getEmployees()) {
 			employees.add(new DealerShipEmployee(employee));
 		}
-		
 	}
 	
 	@Data
@@ -99,19 +90,21 @@ public class DealerShipData {
 	@NoArgsConstructor
 	public static class DealerShipVehicle {
 		private Long vehicleId;
+		private Integer vehicleYear;
 		private String vehicleMake;
 		private String vehicleModel;
 		private String vehicleMilage;
-		private String vehcilePhysicalDamage;
+		private String vehiclePhysicalDamage;
 		private String vehicleImage;
 		private String vehicleType;
 		
 		public DealerShipVehicle(Vehicle vehicle) {
 			vehicleId = vehicle.getVehicleId();
+			vehicleYear = vehicle.getVehicleYear();
 			vehicleMake = vehicle.getVehicleMake();
 			vehicleModel = vehicle.getVehicleModel();
 			vehicleMilage = vehicle.getVehicleMilage();
-			vehcilePhysicalDamage = vehicle.getVehcilePhysicalDamage();
+			vehiclePhysicalDamage = vehicle.getVehiclePhysicalDamage();
 			vehicleImage = vehicle.getVehicleImage();
 			vehicleType = vehicle.getVehicleType();
 			
