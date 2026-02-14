@@ -253,6 +253,7 @@ public class DealerShipService {
 		return vehicleList;
 	}
 
+	@Transactional(readOnly = true)
 	public List<DealerShipEmployee> retrieveEmployees(Long dealerShipId, Long employeeId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
 		List<DealerShipEmployee> employeeList = new LinkedList<>();
@@ -266,6 +267,7 @@ public class DealerShipService {
 		return employeeList;
 	}
 
+	@Transactional(readOnly = true)
 	public List<DealerShipCustomer> retrieveCustomers(Long dealerShipId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
 		List<DealerShipCustomer> customerList = new LinkedList<>();
@@ -278,6 +280,45 @@ public class DealerShipService {
 		return customerList;
 	}
 
+	@Transactional(readOnly = false)
+	public DealerShipEmployee updateEmployee(DealerShipEmployee data, Long dealerShipId, Long employeeId) {
+		DealerShip dealerShip = findDealerShipById(dealerShipId);
+		Employee employee = findEmployeeById(employeeId);
+		
+		copyEmployeeFields(employee, data);
+		
+		dealerShip.getEmployees().remove(employee);
+		Employee savedEmployee = employeeDao.save(employee);
+		dealerShip.getEmployees().add(savedEmployee);
+		
+		return new DealerShipEmployee(savedEmployee);
+	}
+
+	@Transactional(readOnly = false)
+	public DealerShipCustomer updateCustomer(DealerShipCustomer data, Long dealerShipId, Long customerId) {
+		DealerShip dealerShip = findDealerShipById(dealerShipId);
+		Customer customer = findCustomerById(customerId);
+		
+		copyCustomerFields(customer, data);
+		
+		dealerShip.getCustomers().remove(customer);
+		Customer savedCustomer = customerDao.save(customer);
+		dealerShip.getCustomers().add(savedCustomer);
+		
+		return new DealerShipCustomer(savedCustomer);
+	}
 	
-	
+	@Transactional(readOnly = false)
+	public DealerShipVehicle updateVehicle(DealerShipVehicle data, Long dealerShipId, Long vehicleId) {
+		DealerShip dealerShip = findDealerShipById(dealerShipId);
+		Vehicle vehicle = findVehicleById(vehicleId);
+		
+		copyVehicleFields(data, vehicle);
+		
+		dealerShip.getVehicles().remove(vehicle);
+		Vehicle savedVehicle = vehicleDao.save(vehicle);
+		dealerShip.getVehicles().add(vehicle);
+		
+		return new DealerShipVehicle(savedVehicle);
+	}
 }
