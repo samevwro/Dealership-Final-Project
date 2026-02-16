@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +43,7 @@ public class DealerShipService {
 	@Transactional(readOnly = false)
 	public DealerShipData saveDealerShip(DealerShipData data) {
 		Long DealerShipId = data.getDealerShipId();
-		DealerShip dealerShip = findOrCreateDealerShip(DealerShipId);
+		DealerShip dealerShip = findOrCreateDealerShip(DealerShipId, data);
 		
 		copyDealerShipFields(dealerShip, data);
 		
@@ -57,8 +59,20 @@ public class DealerShipService {
 		dealerShip.setDealerShipPhone(data.getDealerShipPhone());		
 	}
 
-	private DealerShip findOrCreateDealerShip(Long dealerShipId) {
+	private DealerShip findOrCreateDealerShip(Long dealerShipId, DealerShipData data) {
 		if(Objects.isNull(dealerShipId)) {
+			Optional<DealerShip> opDealerShipName = dealerShipDao.findByDealerShipName(data.getDealerShipName());
+			Optional<DealerShip> opDealerShipAddress = dealerShipDao.findByDealerShipAddress(data.getDealerShipAddress());
+			Optional<DealerShip> opDealerShipPhone = dealerShipDao.findByDealerShipPhone(data.getDealerShipPhone());
+			
+			if(opDealerShipName.isPresent()) {
+				throw new DuplicateKeyException("Dealership with name " + data.getDealerShipName() + " already exsists.");
+			}else if(opDealerShipAddress.isPresent()) {
+				throw new DuplicateKeyException("Dealership with address " + data.getDealerShipAddress() + " already exsists.");
+			}else if(opDealerShipPhone.isPresent()) {
+				throw new DuplicateKeyException("Dealership with phone " + data.getDealerShipPhone() + " already exsists.");
+			}
+			
 			return new DealerShip();
 		}else {
 			return findDealerShipById(dealerShipId);
@@ -74,7 +88,7 @@ public class DealerShipService {
 	public DealerShipEmployee saveEmployee(DealerShipEmployee data, Long dealerShipId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
 		Long employeeId = data.getEmployeeId();
-		Employee employee = findOrCreateEmployee(employeeId, dealerShipId);
+		Employee employee = findOrCreateEmployee(employeeId, dealerShipId, data.getEmployeeEmail(), data.getEmployeePhone());
 		
 		employee.setDealerShip(dealerShip);
 		copyEmployeeFields(employee, data);
@@ -93,12 +107,22 @@ public class DealerShipService {
 		employee.setEmployeeJobTittle(data.getEmployeeJobTittle());
 	}
 
-	private Employee findOrCreateEmployee(Long employeeId, Long dealerShipId) {
+	private Employee findOrCreateEmployee(Long employeeId, Long dealerShipId, String employeeEmail, String employeePhone) {
 		if(Objects.isNull(dealerShipId)) {
 			new NoSuchElementException("Dealership with ID=" + dealerShipId + " not found");
 			return null;
 		}else {
 		if (Objects.isNull(employeeId)) {
+			Optional<Employee> opEmployeeEmail = employeeDao.findByEmployeeEmail(employeeEmail);
+			Optional<Employee> opEmployeePhone = employeeDao.findByEmployeePhone(employeePhone);
+			
+			if(opEmployeeEmail.isPresent()) {
+				throw new DuplicateKeyException("Employee with email " + employeeEmail + " already exsists.");
+			}else if(opEmployeePhone.isPresent()) {
+				throw new DuplicateKeyException("Employee with phone number " + employeePhone + " already exsists.");
+			}
+			
+			
 			return new Employee();
 		} else {
 			return findEmployeeById(employeeId);
@@ -114,7 +138,7 @@ public class DealerShipService {
 	public DealerShipCustomer saveCustomer(DealerShipCustomer data, Long dealerShipId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
 		Long customerId = data.getCustomerId();
-		Customer customer = findOrCreateCustomer(customerId, dealerShipId);
+		Customer customer = findOrCreateCustomer(customerId, dealerShipId, data.getCustomerEmail());
 		
 		
 		copyCustomerFields(customer, data);
@@ -133,8 +157,13 @@ public class DealerShipService {
 		customer.setCustomerEmail(data.getCustomerEmail());
 	}
 
-	private Customer findOrCreateCustomer(Long customerId, Long dealerShipId) {
+	private Customer findOrCreateCustomer(Long customerId, Long dealerShipId, String customerEmail) {
 		if(Objects.isNull(customerId)){
+			Optional<Customer> opCustomerEmail = customerDao.findByCustomerEmail(customerEmail);
+			
+			if(opCustomerEmail.isPresent()) {
+				throw new DuplicateKeyException("Customer with email " + customerEmail + " already exists.");
+			}
 			return new Customer();
 		}else {
 			return findCustomerById(customerId);
@@ -254,7 +283,7 @@ public class DealerShipService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<DealerShipEmployee> retrieveEmployees(Long dealerShipId, Long employeeId) {
+	public List<DealerShipEmployee> retrieveEmployees(Long dealerShipId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
 		List<DealerShipEmployee> employeeList = new LinkedList<>();
 		
@@ -320,5 +349,19 @@ public class DealerShipService {
 		dealerShip.getVehicles().add(vehicle);
 		
 		return new DealerShipVehicle(savedVehicle);
+	}
+
+	@Transactional(readOnly = false)
+	public List<DealerShipCustomer> addCustomerToDealerShip(Long dealerShipId, Long customerId) {
+		DealerShip dealerShip = findDealerShipById(dealerShipId);
+		Customer customer = findCustomerById(customerId);
+		List<DealerShipCustomer> customerList = new LinkedList<>();
+		
+		dealerShip.getCustomers().add(customer);
+		for(Customer customers : dealerShip.getCustomers()) {
+			DealerShipCustomer dsc = new DealerShipCustomer(customers);
+			customerList.add(dsc);
+		}
+		return customerList;
 	}
 }

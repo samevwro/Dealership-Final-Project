@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import DealerShip.controller.model.DealerShipData;
 import DealerShip.controller.model.DealerShipData.DealerShipCustomer;
 import DealerShip.controller.model.DealerShipData.DealerShipEmployee;
@@ -35,7 +36,7 @@ public class DealerShipController {
 	public DealerShipData insertDealerShip(@RequestBody DealerShipData data) {
 		log.info("Creating Dealership {}", data);
 		return dealerShipService.saveDealerShip(data);
-	}
+	}//good
 
 	@PutMapping("/dealership_put/{dealerShipId}")
 	@ResponseStatus(HttpStatus.OK)
@@ -43,19 +44,19 @@ public class DealerShipController {
 		data.setDealerShipId(dealerShipId);
 		log.info("Updating Dealership with id={}", dealerShipId);
 		return dealerShipService.saveDealerShip(data);
-	}
+	}//good
 
 	@DeleteMapping("/dealership_delete/{dealerShipId}")
 	public Map<String, String> deleteDealership(@PathVariable Long dealerShipId) {
 		log.info("Deleting Dealership with ID={}", dealerShipId);
 		return dealerShipService.deleteDealerShipById(dealerShipId);
-	}
+	}//good
 
 	@GetMapping("/{dealerShipId}")
 	public DealerShipData retrieveDealerShip(@PathVariable Long dealerShipId) {
 		log.info("Retrieving DealerShip with ID={}", dealerShipId);
 		return dealerShipService.retrieveDealerShipById(dealerShipId);
-	}
+	}//good
 
 	// Employee CRUD operations
 
@@ -64,27 +65,26 @@ public class DealerShipController {
 	public DealerShipEmployee insertEmployee(@RequestBody DealerShipEmployee data, @PathVariable Long dealerShipId) {
 		log.info("Creating Employee at Dealership with ID={}", dealerShipId);
 		return dealerShipService.saveEmployee(data, dealerShipId);
-	}
+	}//good
 
 	@GetMapping("/{dealerShipId}/employee")
-	public List<DealerShipEmployee> retrieveAllEmployeeAtDealer(@PathVariable Long dealerShipId,
-			@PathVariable Long employeeId) {
+	public List<DealerShipEmployee> retrieveAllEmployeeAtDealer(@PathVariable Long dealerShipId) {
 		log.info("Retrieving employee at Dealership with ID={}", dealerShipId);
-		return dealerShipService.retrieveEmployees(dealerShipId, employeeId);
-	}
+		return dealerShipService.retrieveEmployees(dealerShipId);
+	}//good
 
 	@PutMapping("/{dealerShipId}/employee/{employeeId}")
 	public DealerShipEmployee updateEmployee(@RequestBody DealerShipEmployee data, @PathVariable Long dealerShipId,
 			@PathVariable Long employeeId) {
 		log.info("Updating employee at Dealership with ID={}", dealerShipId);
 		return dealerShipService.updateEmployee(data, dealerShipId, employeeId);
-	}
+	}//good
 
 	@DeleteMapping("/{dealerShipId}/employee/{employeeId}")
 	public Map<String, String> deleteEmployee(@PathVariable Long dealerShipId, @PathVariable Long employeeId) {
 		log.info("Deleting employee at Dealership with ID={}", dealerShipId);
 		return dealerShipService.deleteEmployee(dealerShipId, employeeId);
-	}
+	}//good
 
 	// Customer CRUD operations
 
@@ -93,26 +93,32 @@ public class DealerShipController {
 	public DealerShipCustomer insertCustomer(@RequestBody DealerShipCustomer data, @PathVariable Long dealerShipId) {
 		log.info("Creating Customer at Dealership={}", dealerShipId);
 		return dealerShipService.saveCustomer(data, dealerShipId);
-	}
+	}//good
 
 	@GetMapping("/{dealerShipId}/customer")
 	public List<DealerShipCustomer> retrieveCustomerByDealerShip(@PathVariable Long dealerShipId) {
 		log.info("Retrieveing all customers at DealerShip with ID={}", dealerShipId);
 		return dealerShipService.retrieveCustomers(dealerShipId);
-	}
+	}//good
 
+	@PutMapping("/{dealerShipId}/add_customer_to_dealer/{customerId}")
+	public List<DealerShipCustomer> addCustomerToDealerShip(@PathVariable Long customerId, @PathVariable Long dealerShipId) {
+		log.info("Adding customer to Dealership with ID={}", dealerShipId);
+		return dealerShipService.addCustomerToDealerShip(dealerShipId, customerId);
+	}//good, need to decide whether to keep this return type or change to returning the dealership with all customers 
+	
 	@PutMapping("/{dealerShipId}/customer/{customerId}")
 	public DealerShipCustomer updateCustomer(@RequestBody DealerShipCustomer data, @PathVariable Long dealerShipId,
 			@PathVariable Long customerId) {
 		log.info("Updating customer at Dealership with ID={}", dealerShipId);
 		return dealerShipService.updateCustomer(data, dealerShipId, customerId);
-	}
+	}//good
 
 	@DeleteMapping("/{dealerShipId}/customer/{customerId}")
 	public Map<String, String> deleteCustomer(@PathVariable Long dealerShipId, @PathVariable Long customerId) {
 		log.info("Deleting customer at Dealership with ID={}", dealerShipId);
 		return dealerShipService.deleteCustomer(dealerShipId, customerId);
-	}
+	}//good
 
 	// Vehicle CRUD operations
 
