@@ -258,12 +258,14 @@ public class DealerShipService {
 	}
 
 	@Transactional(readOnly = false)
-	public Map<String, String> deleteCustomer(Long dealerShipId, Long customerId) {
-		DealerShip dealerShip = findDealerShipById(dealerShipId);
+	public Map<String, String> deleteCustomer(Long customerId) {
+		List<DealerShip> dealerShip = dealerShipDao.findAll();
 		Customer customer = findCustomerById(customerId);
 		
+		for(DealerShip dealerShips : dealerShip) {
+			dealerShips.getCustomers().remove(customer);
+		}
 		customerDao.delete(customer);
-		dealerShip.getCustomers().remove(customer);
 		
 		return Map.of(
 				"message", "Customer with ID=" + customerId + " was deleted successfully");
@@ -324,10 +326,14 @@ public class DealerShipService {
 	}
 
 	@Transactional(readOnly = false)
-	public DealerShipCustomer updateCustomer(DealerShipCustomer data, Long dealerShipId, Long customerId) {
+	public DealerShipCustomer updateCustomer(DealerShipCustomer data, Long dealerShipId, Long customerId, boolean onlyAddDealer) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
 		Customer customer = findCustomerById(customerId);
 		
+		if(onlyAddDealer == true) {
+			dealerShip.getCustomers().add(customer);
+			return new DealerShipCustomer(customer);
+		}else {
 		copyCustomerFields(customer, data);
 		
 		dealerShip.getCustomers().remove(customer);
@@ -335,6 +341,7 @@ public class DealerShipService {
 		dealerShip.getCustomers().add(savedCustomer);
 		
 		return new DealerShipCustomer(savedCustomer);
+		}
 	}
 	
 	@Transactional(readOnly = false)
@@ -349,19 +356,5 @@ public class DealerShipService {
 		dealerShip.getVehicles().add(vehicle);
 		
 		return new DealerShipVehicle(savedVehicle);
-	}
-
-	@Transactional(readOnly = false)
-	public List<DealerShipCustomer> addCustomerToDealerShip(Long dealerShipId, Long customerId) {
-		DealerShip dealerShip = findDealerShipById(dealerShipId);
-		Customer customer = findCustomerById(customerId);
-		List<DealerShipCustomer> customerList = new LinkedList<>();
-		
-		dealerShip.getCustomers().add(customer);
-		for(Customer customers : dealerShip.getCustomers()) {
-			DealerShipCustomer dsc = new DealerShipCustomer(customers);
-			customerList.add(dsc);
-		}
-		return customerList;
 	}
 }

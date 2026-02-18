@@ -100,24 +100,24 @@ public class DealerShipController {
 		log.info("Retrieveing all customers at DealerShip with ID={}", dealerShipId);
 		return dealerShipService.retrieveCustomers(dealerShipId);
 	}//good
-
-	@PutMapping("/{dealerShipId}/add_customer_to_dealer/{customerId}")
-	public List<DealerShipCustomer> addCustomerToDealerShip(@PathVariable Long customerId, @PathVariable Long dealerShipId) {
-		log.info("Adding customer to Dealership with ID={}", dealerShipId);
-		return dealerShipService.addCustomerToDealerShip(dealerShipId, customerId);
-	}//good, need to decide whether to keep this return type or change to returning the dealership with all customers 
 	
-	@PutMapping("/{dealerShipId}/customer/{customerId}")
+	//This put method is used to update any information about the customer including the dealership they are apart of, only
+	// if onlyAddDealer is put to false
+	//The dealerShipId inside the url is the dealership the customer will be added to.
+	//If the customer only needs to be added to another dealer (No changes to customer information), onlyAddDealer will
+	//need to be set to true inside the url and the body cannot be left empty or will result in a 400 status code
+	//It must match the existing dealership if you do not want it to change or add another dealership to the customer
+	@PutMapping("/{dealerShipId}/customer/{customerId}/{onlyAddDealer}")
 	public DealerShipCustomer updateCustomer(@RequestBody DealerShipCustomer data, @PathVariable Long dealerShipId,
-			@PathVariable Long customerId) {
+			@PathVariable Long customerId, @PathVariable boolean onlyAddDealer) {
 		log.info("Updating customer at Dealership with ID={}", dealerShipId);
-		return dealerShipService.updateCustomer(data, dealerShipId, customerId);
-	}//good
+		return dealerShipService.updateCustomer(data, dealerShipId, customerId, onlyAddDealer);
+	}//Not good, body cannot be empty when only updating customer dealership relationship
 
 	@DeleteMapping("/{dealerShipId}/customer/{customerId}")
-	public Map<String, String> deleteCustomer(@PathVariable Long dealerShipId, @PathVariable Long customerId) {
-		log.info("Deleting customer at Dealership with ID={}", dealerShipId);
-		return dealerShipService.deleteCustomer(dealerShipId, customerId);
+	public Map<String, String> deleteCustomer(@PathVariable Long customerId) {
+		log.info("Deleting customer with ID={}", customerId);
+		return dealerShipService.deleteCustomer(customerId);
 	}//good
 
 	// Vehicle CRUD operations
@@ -127,23 +127,23 @@ public class DealerShipController {
 	public DealerShipVehicle insertVehicle(@RequestBody DealerShipVehicle data, @PathVariable Long dealerShipId) {
 		log.info("Creating Vehicle at DealerShip={}", dealerShipId);
 		return dealerShipService.saveVehicle(data, dealerShipId);
-	}
+	}//good
 
 	@GetMapping("/{dealerShipId}/vehicle")
 	public List<DealerShipVehicle> retrieveAllVehicles(@PathVariable Long dealerShipId) {
 		log.info("Retrieving all vehicles fron Dealership with ID={}", dealerShipId);
 		return dealerShipService.retrieveAllVehicles(dealerShipId);
-	}
+	}//good
 
 	@PutMapping("/{dealerShipId}/vehicle/{vehicleId}")
 	public DealerShipVehicle updateVehicle(@RequestBody DealerShipVehicle data, @PathVariable Long dealerShipId, @PathVariable Long vehicleId) {
 		log.info("Updating vehicle at Dealership with ID={}", dealerShipId);
 		return dealerShipService.updateVehicle(data, dealerShipId, vehicleId);
-	}
+	}//good
 
 	@DeleteMapping("/{dealerShipId}/vehicle/{vehicleId}")
 	public Map<String, String> deleteVehicle(@PathVariable Long dealerShipId, @PathVariable Long vehicleId) {
 		log.info("Deleting vehicle at DealerShip={}", dealerShipId);
 		return dealerShipService.deleteVehicle(dealerShipId, vehicleId);
-	}
+	}//good
 }
