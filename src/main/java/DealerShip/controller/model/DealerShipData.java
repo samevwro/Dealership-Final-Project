@@ -22,9 +22,7 @@ public class DealerShipData {
 	private String dealerShipPhone;
 
 	Set<DealerShipVehicle> vehicles = new HashSet<>();
-
 	Set<DealerShipCustomer> customers = new HashSet<>();
-
 	Set<DealerShipEmployee> employees = new HashSet<>();
 
 	public DealerShipData(DealerShip dealerShip) {
@@ -83,7 +81,6 @@ public class DealerShipData {
 			employeeEmail = employee.getEmployeeEmail();
 			employeeJobTittle = employee.getEmployeeJobTittle();
 		}
-		
 	}
 
 	@Data
@@ -107,7 +104,6 @@ public class DealerShipData {
 			vehiclePhysicalDamage = vehicle.getVehiclePhysicalDamage();
 			vehicleImage = vehicle.getVehicleImage();
 			vehicleType = vehicle.getVehicleType();
-			
 		}
 	}
 }

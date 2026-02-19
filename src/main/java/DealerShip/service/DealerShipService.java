@@ -312,49 +312,42 @@ public class DealerShipService {
 	}
 
 	@Transactional(readOnly = false)
-	public DealerShipEmployee updateEmployee(DealerShipEmployee data, Long dealerShipId, Long employeeId) {
-		DealerShip dealerShip = findDealerShipById(dealerShipId);
+	public DealerShipEmployee updateEmployee(DealerShipEmployee data, Long employeeId) {
 		Employee employee = findEmployeeById(employeeId);
-		
 		copyEmployeeFields(employee, data);
 		
-		dealerShip.getEmployees().remove(employee);
 		Employee savedEmployee = employeeDao.save(employee);
-		dealerShip.getEmployees().add(savedEmployee);
 		
 		return new DealerShipEmployee(savedEmployee);
 	}
 
 	@Transactional(readOnly = false)
-	public DealerShipCustomer updateCustomer(DealerShipCustomer data, Long dealerShipId, Long customerId, boolean onlyAddDealer) {
+	public DealerShipCustomer updateCustomer(DealerShipCustomer data, Long customerId) {
+		Customer customer = findCustomerById(customerId);
+		
+		copyCustomerFields(customer, data);
+		Customer savedCustomer = customerDao.save(customer);
+		
+		return new DealerShipCustomer(savedCustomer);
+	}
+
+	
+	@Transactional(readOnly = false)
+	public DealerShipVehicle updateVehicle(DealerShipVehicle data, Long vehicleId) {
+		Vehicle vehicle = findVehicleById(vehicleId);
+		copyVehicleFields(data, vehicle);
+		
+		Vehicle savedVehicle = vehicleDao.save(vehicle);
+		
+		return new DealerShipVehicle(savedVehicle);
+	}
+
+	@Transactional(readOnly = false)
+	public Map<String, String> addExsistingCustomerToDealerShip(Long dealerShipId, Long customerId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
 		Customer customer = findCustomerById(customerId);
 		
-		if(onlyAddDealer == true) {
-			dealerShip.getCustomers().add(customer);
-			return new DealerShipCustomer(customer);
-		}else {
-		copyCustomerFields(customer, data);
-		
-		dealerShip.getCustomers().remove(customer);
-		Customer savedCustomer = customerDao.save(customer);
-		dealerShip.getCustomers().add(savedCustomer);
-		
-		return new DealerShipCustomer(savedCustomer);
-		}
-	}
-	
-	@Transactional(readOnly = false)
-	public DealerShipVehicle updateVehicle(DealerShipVehicle data, Long dealerShipId, Long vehicleId) {
-		DealerShip dealerShip = findDealerShipById(dealerShipId);
-		Vehicle vehicle = findVehicleById(vehicleId);
-		
-		copyVehicleFields(data, vehicle);
-		
-		dealerShip.getVehicles().remove(vehicle);
-		Vehicle savedVehicle = vehicleDao.save(vehicle);
-		dealerShip.getVehicles().add(vehicle);
-		
-		return new DealerShipVehicle(savedVehicle);
+		dealerShip.getCustomers().add(customer);
+		return Map.of("message", "Customer with Id=" + customerId + " was added to Dealership with Id=" + dealerShipId);
 	}
 }

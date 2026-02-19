@@ -29,7 +29,7 @@ public class DealerShipController {
 	@Autowired
 	private DealerShipService dealerShipService;
 
-	// Dealership CRUD operations
+	//*****************Dealership CRUD operations*****************
 
 	@PostMapping("/dealership_post")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -58,7 +58,7 @@ public class DealerShipController {
 		return dealerShipService.retrieveDealerShipById(dealerShipId);
 	}//good
 
-	// Employee CRUD operations
+	//*****************Employee CRUD operations*****************
 
 	@PostMapping("/{dealerShipId}/employee")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -73,11 +73,10 @@ public class DealerShipController {
 		return dealerShipService.retrieveEmployees(dealerShipId);
 	}//good
 
-	@PutMapping("/{dealerShipId}/employee/{employeeId}")
-	public DealerShipEmployee updateEmployee(@RequestBody DealerShipEmployee data, @PathVariable Long dealerShipId,
-			@PathVariable Long employeeId) {
-		log.info("Updating employee at Dealership with ID={}", dealerShipId);
-		return dealerShipService.updateEmployee(data, dealerShipId, employeeId);
+	@PutMapping("/employee/{employeeId}")
+	public DealerShipEmployee updateEmployee(@RequestBody DealerShipEmployee data, @PathVariable Long employeeId) {
+		log.info("Updating employee with ID={}", employeeId);
+		return dealerShipService.updateEmployee(data, employeeId);
 	}//good
 
 	@DeleteMapping("/{dealerShipId}/employee/{employeeId}")
@@ -86,7 +85,7 @@ public class DealerShipController {
 		return dealerShipService.deleteEmployee(dealerShipId, employeeId);
 	}//good
 
-	// Customer CRUD operations
+	//*****************Customer CRUD operations*****************
 
 	@PostMapping("/{dealerShipId}/customer")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -101,18 +100,20 @@ public class DealerShipController {
 		return dealerShipService.retrieveCustomers(dealerShipId);
 	}//good
 	
-	//This put method is used to update any information about the customer including the dealership they are apart of, only
-	// if onlyAddDealer is put to false
-	//The dealerShipId inside the url is the dealership the customer will be added to.
-	//If the customer only needs to be added to another dealer (No changes to customer information), onlyAddDealer will
-	//need to be set to true inside the url and the body cannot be left empty or will result in a 400 status code
-	//It must match the existing dealership if you do not want it to change or add another dealership to the customer
-	@PutMapping("/{dealerShipId}/customer/{customerId}/{onlyAddDealer}")
-	public DealerShipCustomer updateCustomer(@RequestBody DealerShipCustomer data, @PathVariable Long dealerShipId,
-			@PathVariable Long customerId, @PathVariable boolean onlyAddDealer) {
-		log.info("Updating customer at Dealership with ID={}", dealerShipId);
-		return dealerShipService.updateCustomer(data, dealerShipId, customerId, onlyAddDealer);
-	}//Not good, body cannot be empty when only updating customer dealership relationship
+	//This Api call is to ONLY add an existing customer to a new dealership, the new dealership that the customer 
+	//needs to be added to is put into the url where dealerShipId is
+	@PutMapping("/{dealerShipId}/addCustomerToDealer/{customerId}")
+	public Map<String, String> addExsistingCustomerToDealerShip(@PathVariable Long dealerShipId, @PathVariable Long customerId){
+		log.info("Adding customer with ID={}, to dealership with ID={}", customerId, dealerShipId);
+		return dealerShipService.addExsistingCustomerToDealerShip(dealerShipId, customerId);
+	}//good
+	
+	//This Api call is ONLY to alter customer information
+	@PutMapping("/customer/{customerId}")
+	public DealerShipCustomer updateCustomer(@RequestBody DealerShipCustomer data, @PathVariable Long customerId) {
+		log.info("Updating customer with ID={}", customerId);
+		return dealerShipService.updateCustomer(data, customerId);
+	}//
 
 	@DeleteMapping("/{dealerShipId}/customer/{customerId}")
 	public Map<String, String> deleteCustomer(@PathVariable Long customerId) {
@@ -120,7 +121,7 @@ public class DealerShipController {
 		return dealerShipService.deleteCustomer(customerId);
 	}//good
 
-	// Vehicle CRUD operations
+	//*****************Vehicle CRUD operations*****************
 
 	@PostMapping("/{dealerShipId}/vehicle")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -135,10 +136,10 @@ public class DealerShipController {
 		return dealerShipService.retrieveAllVehicles(dealerShipId);
 	}//good
 
-	@PutMapping("/{dealerShipId}/vehicle/{vehicleId}")
-	public DealerShipVehicle updateVehicle(@RequestBody DealerShipVehicle data, @PathVariable Long dealerShipId, @PathVariable Long vehicleId) {
-		log.info("Updating vehicle at Dealership with ID={}", dealerShipId);
-		return dealerShipService.updateVehicle(data, dealerShipId, vehicleId);
+	@PutMapping("/vehicle/{vehicleId}")
+	public DealerShipVehicle updateVehicle(@RequestBody DealerShipVehicle data, @PathVariable Long vehicleId) {
+		log.info("Updating vehicle with ID={}", vehicleId);
+		return dealerShipService.updateVehicle(data, vehicleId);
 	}//good
 
 	@DeleteMapping("/{dealerShipId}/vehicle/{vehicleId}")
