@@ -32,14 +32,16 @@ public class DealerShipService {
 	private DealerShipDao dealerShipDao;
 	
 	@Autowired
-	private CustomerDao customerDao;
+	private EmployeeDao employeeDao;
 	
 	@Autowired
-	private EmployeeDao employeeDao;
+	private CustomerDao customerDao;
 	
 	@Autowired
 	private VehicleDao vehicleDao;
 
+	//*****************Dealership CRUD operations*****************
+	
 	@Transactional(readOnly = false)
 	public DealerShipData saveDealerShip(DealerShipData data) {
 		Long DealerShipId = data.getDealerShipId();
@@ -72,7 +74,6 @@ public class DealerShipService {
 			}else if(opDealerShipPhone.isPresent()) {
 				throw new DuplicateKeyException("Dealership with phone " + data.getDealerShipPhone() + " already exsists.");
 			}
-			
 			return new DealerShip();
 		}else {
 			return findDealerShipById(dealerShipId);
@@ -84,6 +85,27 @@ public class DealerShipService {
 				() -> new NoSuchElementException("Dealership with ID=" + dealerShipId + " not found."));
 	}
 
+	@Transactional(readOnly = true)
+	public DealerShipData retrieveDealerShipById(Long dealerShipId) {
+		DealerShip dealerShip = findDealerShipById(dealerShipId);
+		dealerShip.getCustomers().clear();
+		dealerShip.getEmployees().clear();
+		dealerShip.getVehicles().clear();
+		
+		return new DealerShipData(dealerShip);
+	}
+
+	@Transactional(readOnly = false)
+	public Map<String, String> deleteDealerShipById(Long dealerShipId) {
+		DealerShip dealerShip = findDealerShipById(dealerShipId);
+		dealerShipDao.delete(dealerShip);
+		
+		return Map.of(
+				"message", "DealerShip with ID=" + dealerShipId + " was deleted successfully.");
+	}
+	
+	//*****************Employee CRUD operations*****************
+	
 	@Transactional(readOnly = false)
 	public DealerShipEmployee saveEmployee(DealerShipEmployee data, Long dealerShipId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
@@ -121,8 +143,6 @@ public class DealerShipService {
 			}else if(opEmployeePhone.isPresent()) {
 				throw new DuplicateKeyException("Employee with phone number " + employeePhone + " already exsists.");
 			}
-			
-			
 			return new Employee();
 		} else {
 			return findEmployeeById(employeeId);
@@ -133,13 +153,50 @@ public class DealerShipService {
 		return employeeDao.findById(employeeId).orElseThrow(
 				() -> new NoSuchElementException("Employee with ID=" + employeeId + " not found."));
 	}
+	
+	@Transactional(readOnly = false)
+	public Map<String, String> deleteEmployee(Long dealerShipId, Long employeeId) {
+		DealerShip dealerShip = findDealerShipById(dealerShipId);
+		Employee employee = findEmployeeById(employeeId);
+		
+		employeeDao.delete(employee);
+		dealerShip.getEmployees().remove(employee);
+		
+		return Map.of(
+				"message", "Employee with ID=" + employeeId + " was deleted successfully.");
+	}
+	
+	@Transactional(readOnly = true)
+	public List<DealerShipEmployee> retrieveEmployees(Long dealerShipId) {
+		DealerShip dealerShip = findDealerShipById(dealerShipId);
+		List<DealerShipEmployee> employeeList = new LinkedList<>();
+		
+		for(Employee employee : dealerShip.getEmployees()) {
+			DealerShipEmployee de = new DealerShipEmployee(employee);
+			
+			employeeList.add(de);
+		}
+		return employeeList;
+	}
 
+	@Transactional(readOnly = false)
+	public DealerShipEmployee updateEmployee(DealerShipEmployee data, Long employeeId) {
+		Employee employee = findEmployeeById(employeeId);
+		copyEmployeeFields(employee, data);
+		
+		Employee savedEmployee = employeeDao.save(employee);
+		
+		return new DealerShipEmployee(savedEmployee);
+	}
+
+
+	//*****************Customer CRUD operations*****************
+	
 	@Transactional(readOnly = false)
 	public DealerShipCustomer saveCustomer(DealerShipCustomer data, Long dealerShipId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
 		Long customerId = data.getCustomerId();
 		Customer customer = findOrCreateCustomer(customerId, dealerShipId, data.getCustomerEmail());
-		
 		
 		copyCustomerFields(customer, data);
 		
@@ -174,7 +231,56 @@ public class DealerShipService {
 		return customerDao.findById(customerId).orElseThrow(
 				() -> new NoSuchElementException("Customer with ID=" + customerId + " not found."));
 	}
+	
+	@Transactional(readOnly = false)
+	public Map<String, String> deleteCustomer(Long customerId) {
+		List<DealerShip> dealerShip = dealerShipDao.findAll();
+		Customer customer = findCustomerById(customerId);
+		
+		for(DealerShip dealerShips : dealerShip) {
+			dealerShips.getCustomers().remove(customer);
+		}
+		customerDao.delete(customer);
+		
+		return Map.of(
+				"message", "Customer with ID=" + customerId + " was deleted successfully");
+	}
 
+	@Transactional(readOnly = true)
+	public List<DealerShipCustomer> retrieveCustomers(Long dealerShipId) {
+		DealerShip dealerShip = findDealerShipById(dealerShipId);
+		List<DealerShipCustomer> customerList = new LinkedList<>();
+		
+		for(Customer customer : dealerShip.getCustomers()) {
+			DealerShipCustomer dc = new DealerShipCustomer(customer);
+			
+			customerList.add(dc);
+		}
+		return customerList;
+	}
+
+	@Transactional(readOnly = false)
+	public DealerShipCustomer updateCustomer(DealerShipCustomer data, Long customerId) {
+		Customer customer = findCustomerById(customerId);
+		
+		copyCustomerFields(customer, data);
+		Customer savedCustomer = customerDao.save(customer);
+		
+		return new DealerShipCustomer(savedCustomer);
+	}
+
+	@Transactional(readOnly = false)
+	public Map<String, String> addExsistingCustomerToDealerShip(Long dealerShipId, Long customerId) {
+		DealerShip dealerShip = findDealerShipById(dealerShipId);
+		Customer customer = findCustomerById(customerId);
+		
+		dealerShip.getCustomers().add(customer);
+		return Map.of("message", "Customer with Id=" + customerId + " was added to Dealership with Id=" + dealerShipId);
+	}
+
+
+	//*****************Vehicle CRUD operations*****************
+	
 	@Transactional(readOnly = false)
 	public DealerShipVehicle saveVehicle(DealerShipVehicle data, Long dealerShipId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
@@ -215,25 +321,6 @@ public class DealerShipService {
 	}
 
 	@Transactional(readOnly = false)
-	public Map<String, String> deleteDealerShipById(Long dealerShipId) {
-		DealerShip dealerShip = findDealerShipById(dealerShipId);
-		dealerShipDao.delete(dealerShip);
-		
-		return Map.of(
-				"message", "DealerShip with ID=" + dealerShipId + " was deleted successfully.");
-	}
-
-	@Transactional(readOnly = true)
-	public DealerShipData retrieveDealerShipById(Long dealerShipId) {
-		DealerShip dealerShip = findDealerShipById(dealerShipId);
-		dealerShip.getCustomers().clear();
-		dealerShip.getEmployees().clear();
-		dealerShip.getVehicles().clear();
-		
-		return new DealerShipData(dealerShip);
-	}
-
-	@Transactional(readOnly = false)
 	public Map<String, String> deleteVehicle(Long dealerShipId, Long vehicleId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
 		Vehicle vehicle = findVehicleById(vehicleId);
@@ -244,33 +331,7 @@ public class DealerShipService {
 		return Map.of(
 				"message", "Vehicle with ID=" + vehicleId + " was deleted successfully.");
 	}
-
-	@Transactional(readOnly = false)
-	public Map<String, String> deleteEmployee(Long dealerShipId, Long employeeId) {
-		DealerShip dealerShip = findDealerShipById(dealerShipId);
-		Employee employee = findEmployeeById(employeeId);
-		
-		employeeDao.delete(employee);
-		dealerShip.getEmployees().remove(employee);
-		
-		return Map.of(
-				"message", "Employee with ID=" + employeeId + " was deleted successfully.");
-	}
-
-	@Transactional(readOnly = false)
-	public Map<String, String> deleteCustomer(Long customerId) {
-		List<DealerShip> dealerShip = dealerShipDao.findAll();
-		Customer customer = findCustomerById(customerId);
-		
-		for(DealerShip dealerShips : dealerShip) {
-			dealerShips.getCustomers().remove(customer);
-		}
-		customerDao.delete(customer);
-		
-		return Map.of(
-				"message", "Customer with ID=" + customerId + " was deleted successfully");
-	}
-
+	
 	@Transactional(readOnly = true)
 	public List<DealerShipVehicle> retrieveAllVehicles(Long dealerShipId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
@@ -283,54 +344,6 @@ public class DealerShipService {
 		}
 		return vehicleList;
 	}
-
-	@Transactional(readOnly = true)
-	public List<DealerShipEmployee> retrieveEmployees(Long dealerShipId) {
-		DealerShip dealerShip = findDealerShipById(dealerShipId);
-		List<DealerShipEmployee> employeeList = new LinkedList<>();
-		
-		for(Employee employee : dealerShip.getEmployees()) {
-			DealerShipEmployee de = new DealerShipEmployee(employee);
-			
-			employeeList.add(de);
-		}
-		
-		return employeeList;
-	}
-
-	@Transactional(readOnly = true)
-	public List<DealerShipCustomer> retrieveCustomers(Long dealerShipId) {
-		DealerShip dealerShip = findDealerShipById(dealerShipId);
-		List<DealerShipCustomer> customerList = new LinkedList<>();
-		
-		for(Customer customer : dealerShip.getCustomers()) {
-			DealerShipCustomer dc = new DealerShipCustomer(customer);
-			
-			customerList.add(dc);
-		}
-		return customerList;
-	}
-
-	@Transactional(readOnly = false)
-	public DealerShipEmployee updateEmployee(DealerShipEmployee data, Long employeeId) {
-		Employee employee = findEmployeeById(employeeId);
-		copyEmployeeFields(employee, data);
-		
-		Employee savedEmployee = employeeDao.save(employee);
-		
-		return new DealerShipEmployee(savedEmployee);
-	}
-
-	@Transactional(readOnly = false)
-	public DealerShipCustomer updateCustomer(DealerShipCustomer data, Long customerId) {
-		Customer customer = findCustomerById(customerId);
-		
-		copyCustomerFields(customer, data);
-		Customer savedCustomer = customerDao.save(customer);
-		
-		return new DealerShipCustomer(savedCustomer);
-	}
-
 	
 	@Transactional(readOnly = false)
 	public DealerShipVehicle updateVehicle(DealerShipVehicle data, Long vehicleId) {
@@ -341,13 +354,4 @@ public class DealerShipService {
 		
 		return new DealerShipVehicle(savedVehicle);
 	}
-
-	@Transactional(readOnly = false)
-	public Map<String, String> addExsistingCustomerToDealerShip(Long dealerShipId, Long customerId) {
-		DealerShip dealerShip = findDealerShipById(dealerShipId);
-		Customer customer = findCustomerById(customerId);
-		
-		dealerShip.getCustomers().add(customer);
-		return Map.of("message", "Customer with Id=" + customerId + " was added to Dealership with Id=" + dealerShipId);
 	}
-}

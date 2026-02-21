@@ -74,6 +74,7 @@ public class DealerShipController {
 	}//good
 
 	@PutMapping("/employee/{employeeId}")
+	@ResponseStatus(HttpStatus.OK)
 	public DealerShipEmployee updateEmployee(@RequestBody DealerShipEmployee data, @PathVariable Long employeeId) {
 		log.info("Updating employee with ID={}", employeeId);
 		return dealerShipService.updateEmployee(data, employeeId);
@@ -103,6 +104,7 @@ public class DealerShipController {
 	//This Api call is to ONLY add an existing customer to a new dealership, the new dealership that the customer 
 	//needs to be added to is put into the url where dealerShipId is
 	@PutMapping("/{dealerShipId}/addCustomerToDealer/{customerId}")
+	@ResponseStatus(HttpStatus.OK)
 	public Map<String, String> addExsistingCustomerToDealerShip(@PathVariable Long dealerShipId, @PathVariable Long customerId){
 		log.info("Adding customer with ID={}, to dealership with ID={}", customerId, dealerShipId);
 		return dealerShipService.addExsistingCustomerToDealerShip(dealerShipId, customerId);
@@ -110,10 +112,11 @@ public class DealerShipController {
 	
 	//This Api call is ONLY to alter customer information
 	@PutMapping("/customer/{customerId}")
+	@ResponseStatus(HttpStatus.OK)
 	public DealerShipCustomer updateCustomer(@RequestBody DealerShipCustomer data, @PathVariable Long customerId) {
 		log.info("Updating customer with ID={}", customerId);
 		return dealerShipService.updateCustomer(data, customerId);
-	}//
+	}//good
 
 	@DeleteMapping("/{dealerShipId}/customer/{customerId}")
 	public Map<String, String> deleteCustomer(@PathVariable Long customerId) {
@@ -137,6 +140,7 @@ public class DealerShipController {
 	}//good
 
 	@PutMapping("/vehicle/{vehicleId}")
+	@ResponseStatus(HttpStatus.OK)
 	public DealerShipVehicle updateVehicle(@RequestBody DealerShipVehicle data, @PathVariable Long vehicleId) {
 		log.info("Updating vehicle with ID={}", vehicleId);
 		return dealerShipService.updateVehicle(data, vehicleId);
