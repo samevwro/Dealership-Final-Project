@@ -126,7 +126,7 @@ public class DealerShipService {
 		employee.setEmployeeLastName(data.getEmployeeLastName());
 		employee.setEmployeePhone(data.getEmployeePhone());
 		employee.setEmployeeEmail(data.getEmployeeEmail());
-		employee.setEmployeeJobTittle(data.getEmployeeJobTittle());
+		employee.setEmployeeJobTitle(data.getEmployeeJobTitle());
 	}
 
 	private Employee findOrCreateEmployee(Long employeeId, Long dealerShipId, String employeeEmail, String employeePhone) {

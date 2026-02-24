@@ -25,6 +25,17 @@ public class DealerShipData {
 	Set<DealerShipCustomer> customers = new HashSet<>();
 	Set<DealerShipEmployee> employees = new HashSet<>();
 
+	public DealerShipData(Long dealerShipId, String dealerShipName, String dealerShipAddress, String dealerShipState,
+			String dealerShipZip, String dealerShipPhone) {
+		this.dealerShipId = dealerShipId;
+		this.dealerShipName = dealerShipName;
+		this.dealerShipAddress = dealerShipAddress;
+		this.dealerShipState = dealerShipState;
+		this.dealerShipZip = dealerShipZip;
+		this.dealerShipPhone = dealerShipPhone;
+		
+	}
+	
 	public DealerShipData(DealerShip dealerShip) {
 		dealerShipId = dealerShip.getDealerShipId();
 		dealerShipName = dealerShip.getDealerShipName();
@@ -71,7 +82,7 @@ public class DealerShipData {
 		private String employeeLastName;
 		private String employeePhone;
 		private String employeeEmail;
-		private String employeeJobTittle;
+		private String employeeJobTitle;
 		
 		public DealerShipEmployee(Employee employee) {
 			employeeId = employee.getEmployeeId();
@@ -79,7 +90,7 @@ public class DealerShipData {
 			employeeLastName = employee.getEmployeeLastName();
 			employeePhone = employee.getEmployeePhone();
 			employeeEmail = employee.getEmployeeEmail();
-			employeeJobTittle = employee.getEmployeeJobTittle();
+			employeeJobTitle = employee.getEmployeeJobTitle();
 		}
 	}
 
@@ -105,5 +116,18 @@ public class DealerShipData {
 			vehicleImage = vehicle.getVehicleImage();
 			vehicleType = vehicle.getVehicleType();
 		}
+	}
+
+	public DealerShip toDealerShip() {
+		DealerShip dealerShip = new DealerShip();
+		
+		dealerShip.setDealerShipId(dealerShipId);
+		dealerShip.setDealerShipName(dealerShipName);
+		dealerShip.setDealerShipAddress(dealerShipAddress);
+		dealerShip.setDealerShipState(dealerShipState);
+		dealerShip.setDealerShipZip(dealerShipZip);
+		dealerShip.setDealerShipPhone(dealerShipPhone);
+		
+		return dealerShip;
 	}
 }
