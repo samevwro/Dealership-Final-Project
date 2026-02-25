@@ -21,7 +21,7 @@ CREATE TABLE employee (
 	employee_last_name VARCHAR(128) NOT NULL,
 	employee_phone VARCHAR(128),
 	employee_email VARCHAR(128),
-	employee_job_tittle VARCHAR(64),
+	employee_job_title VARCHAR(64),
 	dealer_ship_id int,
 	PRIMARY KEY (employee_id),
 	FOREIGN KEY (dealer_ship_id) REFERENCES dealer_ship (dealer_ship_id) ON DELETE CASCADE

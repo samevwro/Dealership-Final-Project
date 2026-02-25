@@ -34,4 +34,18 @@ class DealerShipControllerTest extends DealerShipServiceTestSupport {
 		//And: there is a new dealership entity
 		assertThat(rowsInLoactionTable()).isOne();
 	}
+	
+	@Test
+	void testRetrieveDealerShip() {
+		//Given: A dealership
+		DealerShipData dealerShip = insertDealerShip(buildInsertDealerShip(1));
+		DealerShipData expected = buildInsertDealerShip(1);
+		
+		//When: The location is retrieved by id
+		DealerShipData actual = retrieveDealerShip(dealerShip.getDealerShipId());
+		
+		//Then: The actual location is equal to the expected location
+		assertThat(actual).isEqualTo(expected);
+		
+	}
 }

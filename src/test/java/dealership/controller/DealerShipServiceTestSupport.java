@@ -56,4 +56,8 @@ public class DealerShipServiceTestSupport {
 	protected int rowsInLoactionTable() {
 		return JdbcTestUtils.countRowsInTable(jdbcTemplate, DEALER_SHIP);
 	}
+	
+	protected DealerShipData retrieveDealerShip(Long dealerShipId) {
+		return dealerShipService.retrieveDealerShipById(dealerShipId);
+	}
 }
