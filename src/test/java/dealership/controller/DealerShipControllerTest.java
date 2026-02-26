@@ -32,7 +32,7 @@ class DealerShipControllerTest extends DealerShipServiceTestSupport {
 		assertThat(actual).isEqualTo(expected);
 		
 		//And: there is a new dealership entity
-		assertThat(rowsInLoactionTable()).isOne();
+		assertThat(rowsInDealerShipTable()).isOne();
 	}
 	
 	@Test
@@ -47,5 +47,25 @@ class DealerShipControllerTest extends DealerShipServiceTestSupport {
 		//Then: The actual location is equal to the expected location
 		assertThat(actual).isEqualTo(expected);
 		
+	}
+	
+	@Test
+	void testDeleteDealerShipAndVehicle() {
+		//Given: A dealership
+		DealerShipData dealerShip = insertDealerShip(buildInsertDealerShip(1));
+		Long dealerShipId = dealerShip.getDealerShipId();
+		
+		insertVehicle(buildInsertVehicle(1), dealerShip);
+		insertVehicle(buildInsertVehicle(2), dealerShip);
+		
+		
+		assertThat(rowsInDealerShipTable()).isOne();
+		assertThat(rowsInVehicleTable()).isEqualTo(2);
+		//When: A Dealership is deleted
+		deleteDealerShip(dealerShipId);
+		
+		//Then: There is no dealership and no vehicles left in the tables
+		assertThat(rowsInDealerShipTable()).isZero();
+		assertThat(rowsInVehicleTable()).isZero();
 	}
 }

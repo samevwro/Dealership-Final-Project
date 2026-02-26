@@ -32,7 +32,7 @@ CREATE TABLE vehicle (
 	vehicle_year integer NOT NULL,
 	vehicle_make VARCHAR(64) NOT NULL,
 	vehicle_model VARCHAR(64) NOT NULL,
-	vehicle_milage int,
+	vehicle_milage VARCHAR(64),
 	vehicle_physical_damage VARCHAR(256),
 	vehicle_image VARCHAR(256),
 	vehicle_type VARCHAR(128),

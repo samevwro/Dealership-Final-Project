@@ -116,7 +116,37 @@ public class DealerShipData {
 			vehicleImage = vehicle.getVehicleImage();
 			vehicleType = vehicle.getVehicleType();
 		}
+		
+		public DealerShipVehicle(Long vehicleId, Integer vehicleYear, String vehicleMake, String vehicleModel, String vehicleMilage,
+				String vehiclePhysicalDamage, String vehicleImage, String vehicleType) {
+			this.vehicleId = vehicleId;
+			this.vehicleYear = vehicleYear;
+			this.vehicleMake = vehicleMake;
+			this.vehicleModel = vehicleModel;
+			this.vehicleMilage = vehicleMilage;
+			this.vehiclePhysicalDamage = vehiclePhysicalDamage;
+			this.vehicleImage = vehicleImage;
+			this.vehicleType = vehicleType;
+		}
+		
+		
+		public Vehicle toVehicle() {
+			Vehicle vehicle = new Vehicle();
+			
+			vehicle.setVehicleId(vehicleId);
+			vehicle.setVehicleYear(vehicleYear);
+			vehicle.setVehicleMake(vehicleMake);
+			vehicle.setVehicleModel(vehicleModel);
+			vehicle.setVehicleMilage(vehicleMilage);
+			vehicle.setVehiclePhysicalDamage(vehiclePhysicalDamage);
+			vehicle.setVehicleImage(vehicleImage);
+			vehicle.setVehicleType(vehicleType);
+			
+			return vehicle;
+		}
 	}
+	
+	
 
 	public DealerShip toDealerShip() {
 		DealerShip dealerShip = new DealerShip();

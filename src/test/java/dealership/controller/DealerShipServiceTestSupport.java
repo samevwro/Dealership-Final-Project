@@ -5,10 +5,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import DealerShip.controller.model.DealerShipData;
+import DealerShip.controller.model.DealerShipData.DealerShipVehicle;
 import DealerShip.entity.DealerShip;
+import DealerShip.entity.Vehicle;
 import DealerShip.service.DealerShipService;
 
 public class DealerShipServiceTestSupport {
+	private static final String VEHICLE = "vehicle";
+
 	private static final String DEALER_SHIP = "dealer_ship";
 
 	// @formatter:off
@@ -29,6 +33,28 @@ public class DealerShipServiceTestSupport {
 			"40981",
 			"(520) 598-4823"
 			);
+	
+	private DealerShipVehicle insertVehicle1 = new DealerShipVehicle(
+			1L,
+			2013,
+			"Ford",
+			"F-150",
+			"123,900",
+			"Dent on rear tailgate",
+			"",
+			"Truck"
+			);
+	private DealerShipVehicle insertVehicle2 = new DealerShipVehicle(
+			2L,
+			2007,
+			"Honda",
+			"Accord",
+			"180,720",
+			"The passenger mirror is cracked and lark scratch across the passenger front door",
+			"",
+			"Sedan"
+			);
+			
 	// @formatter:on
 	
 	@Autowired
@@ -53,11 +79,34 @@ public class DealerShipServiceTestSupport {
 		return dealerShipService.saveDealerShip(clone);
 	}
 	
-	protected int rowsInLoactionTable() {
+	protected int rowsInDealerShipTable() {
 		return JdbcTestUtils.countRowsInTable(jdbcTemplate, DEALER_SHIP);
 	}
 	
 	protected DealerShipData retrieveDealerShip(Long dealerShipId) {
 		return dealerShipService.retrieveDealerShipById(dealerShipId);
 	}
+	protected int rowsInVehicleTable() {
+		return JdbcTestUtils.countRowsInTable(jdbcTemplate, VEHICLE);
+	}
+
+	protected DealerShipVehicle insertVehicle(DealerShipVehicle insertVehicle, DealerShipData dealerShip) {
+		Vehicle vehicle = insertVehicle.toVehicle();
+		DealerShipVehicle clone = new DealerShipVehicle(vehicle);
+		
+		clone.setVehicleId(null);
+		return dealerShipService.saveVehicle(clone, dealerShip.getDealerShipId());
+	}
+
+	protected DealerShipVehicle buildInsertVehicle(int i) {
+		if(i == 1) {
+			return insertVehicle1;
+		}else {
+			return insertVehicle2;
+		}
+	}
+	protected void deleteDealerShip(Long dealerShipId) {
+		dealerShipService.deleteDealerShipById(dealerShipId);
+	}
+
 }
