@@ -7,24 +7,93 @@
 		  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 	</head>
 	<body>
-		<h2 class="">Dealership Final Project</h2>
-		<div class="dropdown">
-		  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-		    Dealership Select
-		  </button>
-		  <ul class="dropdown-menu">
-		    <li><a class="dropdown-item" href="#">Action</a></li>
-		    <li><a class="dropdown-item" href="#">Another action</a></li>
-		    <li><a class="dropdown-item" href="#">Something else here</a></li>
-		  </ul>
-		</div>
-		<table>
-			<tr>
-				<th></th>
-				<th></th>
-			</tr>
+		<h2 class="p-3" id="Dealer-name-title">Dealership</h2>
+		<div class="container">
+			<div class="row">
+			<div class="col-3 p-3">
+				<div class="dropdown">
+				  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				    Dealership Select
+				  </button>
+				  <ul class="dropdown-menu">
+				    <li><a class="dropdown-item" href="#">Action</a></li>
+				    <li><a class="dropdown-item" href="#">Another action</a></li>
+				    <li><a class="dropdown-item" href="#">Something else here</a></li>
+				  </ul>
+				</div>
+			</div>
+			<div class="col-3 p-3">
+				<div class="dropdown">
+						  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						    Info Select
+						  </button>
+						  <ul class="dropdown-menu">
+						    <li><a id="Customer-Select" class="dropdown-item" href="#">Customers</a></li>
+						    <li><a id="Employee-Select" class="dropdown-item" href="#">Employees</a></li>
+						    <li><a id="Vehicle-Select" class="dropdown-item" href="#">Vehicles</a></li>
+						  </ul>
+						</div>
+					</div>
+				</div>
+				<divs class="row border border-2 border-black p-2">
+					<div class="col-3 p-2">
+						<h5 class="border-bottom border-black border-2" >Dealership address</h5>
+						<h5 id="dealer-address">4625 w Wadsworth, Ave</h5>
+					</div>
+					<div class="col-3 p-2 border-start border-2 border-black">
+						<h5 class="border-bottom border-black border-2">State</h5>
+						<h5 id="dealer-state">Colorado</h5>
+					</div>
+					<div class="col-3 p-2 border-start border-2 border-black">
+						<h5 class="border-bottom border-black border-2">Zip code</h5>
+						<h5 id="dealer-zip">80201</h5>
+					</div>
+					<div class="col-3 p-2 border-start border-2 border-black">
+						<h5 class="border-bottom border-black border-2">Phone number</h5>
+						<h5 id="dealer-phone">(303) 403-2049</h5>
+					</div>
+				</div>
+			</div>
+			<div>
 			
-		</table>
+			<table id="data-table" class="border border-2 border-black p-2">
+				<tr><th>something</th></tr>
+			</table>
+		</div>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+		<script>
+						
+			const vehicleTableHeader = {
+				<tr>
+					<th>Image</th>
+					<th>Year</th>
+					<th>Make</th>
+					<th>Model</th>
+					<th>Milage</th>
+					<th>Type</th>
+					<th>Physical Damage</th>
+				</tr>
+			};
+			const customerTableHeader = {
+				<tr>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+				</tr>
+			};
+			const employeeTableHeader = {
+				<tr>
+					<th>Frist Name</th>
+					<th>Last Name</th>
+					<th>Phone Number</th>
+					<th>Email</th>
+					<th>Job Title</th>
+				</tr>
+			};
+			
+			document.getElementById('Customer-select').addEventListener('click', () =>{});
+			document.getElementById('Employee-select').addEventListener('click', () =>{});
+			document.getElementById('Vehicle-select').addEventListener('click', () =>{});
+		</script>
 	</body>
 	</html>
