@@ -129,7 +129,6 @@ public class DealerShipData {
 			this.vehicleType = vehicleType;
 		}
 		
-		
 		public Vehicle toVehicle() {
 			Vehicle vehicle = new Vehicle();
 			
@@ -145,8 +144,6 @@ public class DealerShipData {
 			return vehicle;
 		}
 	}
-	
-	
 
 	public DealerShip toDealerShip() {
 		DealerShip dealerShip = new DealerShip();

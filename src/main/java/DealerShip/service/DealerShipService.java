@@ -104,12 +104,25 @@ public class DealerShipService {
 				"message", "DealerShip with ID=" + dealerShipId + " was deleted successfully.");
 	}
 	
+	@Transactional(readOnly = true)
+	public List<DealerShipData> retrieveAllDealerShips() {
+		List<DealerShip> dealerShips = dealerShipDao.findAll();
+		List<DealerShipData> result = new LinkedList<>();
+		
+		for(DealerShip dealerShip : dealerShips) {
+			DealerShipData dsd = new DealerShipData(dealerShip);
+			result.add(dsd);
+		}
+		return result;
+	}
+	
 	//*****************Employee CRUD operations*****************
 	
 	@Transactional(readOnly = false)
 	public DealerShipEmployee saveEmployee(DealerShipEmployee data, Long dealerShipId) {
 		DealerShip dealerShip = findDealerShipById(dealerShipId);
 		Long employeeId = data.getEmployeeId();
+		
 		Employee employee = findOrCreateEmployee(employeeId, dealerShipId, data.getEmployeeEmail(), data.getEmployeePhone());
 		
 		employee.setDealerShip(dealerShip);

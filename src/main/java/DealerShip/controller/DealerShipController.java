@@ -36,7 +36,7 @@ public class DealerShipController {
 	public DealerShipData insertDealerShip(@RequestBody DealerShipData data) {
 		log.info("Creating Dealership {}", data);
 		return dealerShipService.saveDealerShip(data);
-	}//good
+	}
 
 	@PutMapping("/dealership_put/{dealerShipId}")
 	@ResponseStatus(HttpStatus.OK)
@@ -44,19 +44,25 @@ public class DealerShipController {
 		data.setDealerShipId(dealerShipId);
 		log.info("Updating Dealership with id={}", dealerShipId);
 		return dealerShipService.saveDealerShip(data);
-	}//good
+	}
 
 	@DeleteMapping("/dealership_delete/{dealerShipId}")
 	public Map<String, String> deleteDealership(@PathVariable Long dealerShipId) {
 		log.info("Deleting Dealership with ID={}", dealerShipId);
 		return dealerShipService.deleteDealerShipById(dealerShipId);
-	}//good
+	}
 
 	@GetMapping("/{dealerShipId}")
 	public DealerShipData retrieveDealerShip(@PathVariable Long dealerShipId) {
 		log.info("Retrieving DealerShip with ID={}", dealerShipId);
 		return dealerShipService.retrieveDealerShipById(dealerShipId);
-	}//good
+	}
+	
+	@GetMapping("/dealership")
+	public List<DealerShipData> retrieveAllDealerShips() {
+		log.info("Retrieveing all dealerships");
+		return dealerShipService.retrieveAllDealerShips();
+	}
 
 	//*****************Employee CRUD operations*****************
 
@@ -65,26 +71,26 @@ public class DealerShipController {
 	public DealerShipEmployee insertEmployee(@RequestBody DealerShipEmployee data, @PathVariable Long dealerShipId) {
 		log.info("Creating Employee at Dealership with ID={}", dealerShipId);
 		return dealerShipService.saveEmployee(data, dealerShipId);
-	}//good
+	}
 
 	@GetMapping("/{dealerShipId}/employee")
 	public List<DealerShipEmployee> retrieveAllEmployeeAtDealer(@PathVariable Long dealerShipId) {
 		log.info("Retrieving employee at Dealership with ID={}", dealerShipId);
 		return dealerShipService.retrieveEmployees(dealerShipId);
-	}//good
+	}
 
 	@PutMapping("/employee/{employeeId}")
 	@ResponseStatus(HttpStatus.OK)
 	public DealerShipEmployee updateEmployee(@RequestBody DealerShipEmployee data, @PathVariable Long employeeId) {
 		log.info("Updating employee with ID={}", employeeId);
 		return dealerShipService.updateEmployee(data, employeeId);
-	}//good
+	}
 
 	@DeleteMapping("/{dealerShipId}/employee/{employeeId}")
 	public Map<String, String> deleteEmployee(@PathVariable Long dealerShipId, @PathVariable Long employeeId) {
 		log.info("Deleting employee at Dealership with ID={}", dealerShipId);
 		return dealerShipService.deleteEmployee(dealerShipId, employeeId);
-	}//good
+	}
 
 	//*****************Customer CRUD operations*****************
 
@@ -93,22 +99,22 @@ public class DealerShipController {
 	public DealerShipCustomer insertCustomer(@RequestBody DealerShipCustomer data, @PathVariable Long dealerShipId) {
 		log.info("Creating Customer at Dealership={}", dealerShipId);
 		return dealerShipService.saveCustomer(data, dealerShipId);
-	}//good
+	}
 
 	@GetMapping("/{dealerShipId}/customer")
 	public List<DealerShipCustomer> retrieveCustomerByDealerShip(@PathVariable Long dealerShipId) {
 		log.info("Retrieveing all customers at DealerShip with ID={}", dealerShipId);
 		return dealerShipService.retrieveCustomers(dealerShipId);
-	}//good
+	}
 	
 	//This Api call is to ONLY add an existing customer to a new dealership, the new dealership that the customer 
-	//needs to be added to is put into the url where dealerShipId is
+	//needs to be added needs to be put into the url where dealerShipId is
 	@PutMapping("/{dealerShipId}/addCustomerToDealer/{customerId}")
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String, String> addExsistingCustomerToDealerShip(@PathVariable Long dealerShipId, @PathVariable Long customerId){
 		log.info("Adding customer with ID={}, to dealership with ID={}", customerId, dealerShipId);
 		return dealerShipService.addExsistingCustomerToDealerShip(dealerShipId, customerId);
-	}//good
+	}
 	
 	//This Api call is ONLY to alter customer information
 	@PutMapping("/customer/{customerId}")
@@ -116,13 +122,13 @@ public class DealerShipController {
 	public DealerShipCustomer updateCustomer(@RequestBody DealerShipCustomer data, @PathVariable Long customerId) {
 		log.info("Updating customer with ID={}", customerId);
 		return dealerShipService.updateCustomer(data, customerId);
-	}//good
+	}
 
 	@DeleteMapping("/{dealerShipId}/customer/{customerId}")
 	public Map<String, String> deleteCustomer(@PathVariable Long customerId) {
 		log.info("Deleting customer with ID={}", customerId);
 		return dealerShipService.deleteCustomer(customerId);
-	}//good
+	}
 
 	//*****************Vehicle CRUD operations*****************
 
@@ -131,24 +137,24 @@ public class DealerShipController {
 	public DealerShipVehicle insertVehicle(@RequestBody DealerShipVehicle data, @PathVariable Long dealerShipId) {
 		log.info("Creating Vehicle at DealerShip={}", dealerShipId);
 		return dealerShipService.saveVehicle(data, dealerShipId);
-	}//good
+	}
 
 	@GetMapping("/{dealerShipId}/vehicle")
 	public List<DealerShipVehicle> retrieveAllVehicles(@PathVariable Long dealerShipId) {
 		log.info("Retrieving all vehicles fron Dealership with ID={}", dealerShipId);
 		return dealerShipService.retrieveAllVehicles(dealerShipId);
-	}//good
+	}
 
 	@PutMapping("/vehicle/{vehicleId}")
 	@ResponseStatus(HttpStatus.OK)
 	public DealerShipVehicle updateVehicle(@RequestBody DealerShipVehicle data, @PathVariable Long vehicleId) {
 		log.info("Updating vehicle with ID={}", vehicleId);
 		return dealerShipService.updateVehicle(data, vehicleId);
-	}//good
+	}
 
 	@DeleteMapping("/{dealerShipId}/vehicle/{vehicleId}")
 	public Map<String, String> deleteVehicle(@PathVariable Long dealerShipId, @PathVariable Long vehicleId) {
 		log.info("Deleting vehicle at DealerShip={}", dealerShipId);
 		return dealerShipService.deleteVehicle(dealerShipId, vehicleId);
-	}//good
+	}
 }

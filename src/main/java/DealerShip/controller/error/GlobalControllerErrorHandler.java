@@ -74,12 +74,4 @@ public class GlobalControllerErrorHandler {
 		
 		return excMsg;
 	}
-
-
-	
-	
-
-
-
-
 }

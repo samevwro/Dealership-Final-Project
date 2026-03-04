@@ -3,5 +3,12 @@
   "employeeLastName" : "Barry",
   "employeePhone" : "540-382-9672",
   "employeeEmail" : "GBarry@gmail.com",
-  "employeeJobTittle": "Sales Associate"
+  "employeeJobTitle": "Sales Associate"
+},
+{
+  "employeeFirstName": "Triana",
+  "employeeLastName" : "Adriel",
+  "employeePhone" : "540-197-6482",
+  "employeeEmail" : "TAdriel@gmail.com",
+  "employeeJobTitle": "Sales Associate"
 }

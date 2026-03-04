@@ -6,4 +6,13 @@
   "vehiclePhysicalDamage": "There are scratches and dents on the rear tailgate. The passenger side mirror is cracked",
   "vehicleImage": "",
   "vehicleType": "Full sized truck"
+},
+{
+  "vehicleYear": "2020",
+  "vehicleMake": "Honda",
+  "vehicleModel": "Pilot",
+  "vehicleMilage": "55,939",
+  "vehiclePhysicalDamage": "No physical damage",
+  "vehicleImage": "https://www.kirklandhonda.com/2020-honda-pilot-colors/",
+  "vehicleType": "SUV"
 }

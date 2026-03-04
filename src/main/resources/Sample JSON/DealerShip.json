@@ -4,4 +4,11 @@
   "dealerShipState": "Colorado",
   "dealerShipZip": "80123",
   "dealerShipPhone": "303-518-9037"
+},
+{
+  "dealerShipName": "Auto Nation Honda",
+  "dealerShipAddress": "5671 S Kipling, Ave",
+  "dealerShipState": "Wyomming",
+  "dealerShipZip": "73642",
+  "dealerShipPhone": "410-584-6732"
 }
