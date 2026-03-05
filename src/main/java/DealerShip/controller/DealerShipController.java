@@ -52,12 +52,14 @@ public class DealerShipController {
 		return dealerShipService.deleteDealerShipById(dealerShipId);
 	}
 
+	//This returns specific dealerships by their id
 	@GetMapping("/{dealerShipId}")
 	public DealerShipData retrieveDealerShip(@PathVariable Long dealerShipId) {
 		log.info("Retrieving DealerShip with ID={}", dealerShipId);
 		return dealerShipService.retrieveDealerShipById(dealerShipId);
 	}
 	
+	//This retrieves all dealerships and all customer, employee, and vehicle data
 	@GetMapping("/dealership")
 	public List<DealerShipData> retrieveAllDealerShips() {
 		log.info("Retrieveing all dealerships");
@@ -107,8 +109,8 @@ public class DealerShipController {
 		return dealerShipService.retrieveCustomers(dealerShipId);
 	}
 	
-	//This Api call is to ONLY add an existing customer to a new dealership, the new dealership that the customer 
-	//needs to be added needs to be put into the url where dealerShipId is
+	//This call is to ONLY add an existing customer to a new dealership, the new dealership that the customer 
+	//needs to be added must be put into the uri where dealerShipId is
 	@PutMapping("/{dealerShipId}/addCustomerToDealer/{customerId}")
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String, String> addExsistingCustomerToDealerShip(@PathVariable Long dealerShipId, @PathVariable Long customerId){
@@ -116,7 +118,7 @@ public class DealerShipController {
 		return dealerShipService.addExsistingCustomerToDealerShip(dealerShipId, customerId);
 	}
 	
-	//This Api call is ONLY to alter customer information
+	//This Api call is to alter customer information
 	@PutMapping("/customer/{customerId}")
 	@ResponseStatus(HttpStatus.OK)
 	public DealerShipCustomer updateCustomer(@RequestBody DealerShipCustomer data, @PathVariable Long customerId) {
